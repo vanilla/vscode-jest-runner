@@ -1,6 +1,7 @@
 import { parse } from 'jest-editor-support';
 import * as vscode from 'vscode';
 import { JestRunnerConfig } from './jestRunnerConfig';
+import * as fs from "fs";
 import {
   escapeRegExpForPath,
   escapeRegExp,
@@ -58,7 +59,7 @@ export class JestRunner {
     await this.goToCwd();
     await this.runTerminalCommand(command);
   }
-  
+
   public async runCurrentFile(options?: string[]): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -176,6 +177,7 @@ export class JestRunner {
   }
 
   private buildJestArgs(filePath: string, testName: string, withQuotes: boolean, options: string[] = []): string[] {
+    filePath = fs.realpathSync(filePath);
     const args: string[] = [];
     const quoter = withQuotes ? quote : (str) => str;
 
